@@ -4,7 +4,7 @@ mongoose.Promise = global.Promise;
 const connect = (url) => mongoose.connect(url, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  useFindAndModify: false
+  useFindAndModify: false,
 })
 
 module.exports = connect;

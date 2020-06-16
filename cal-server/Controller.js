@@ -45,21 +45,6 @@ const getDayByDay = async (req, res) => {
     }).catch(err => console.log(err))
 }
 
-const createOne = async (req, res) => {
-    const doc = await Day.create({ date: req.params.date,
-        time: req.body.time, available: true }, (err, day) => {
-
-            if (err) {
-                console.log(err)
-                return res.status(400).json({ success: false, error: err })
-            }
-
-
-            return res.status(201).json({ success: true, data: doc})
-
-    }).catch(err => console.log(err))
-}
-
 const updateDay = async (req, res) => {
     try {
         const doc = await Day.findOneAndUpdate(
@@ -79,6 +64,5 @@ module.exports = {
     getDayById,
     getDays,
     getDayByDay,
-    createOne,
     updateDay
 };

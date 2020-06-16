@@ -26,7 +26,6 @@ app.use((req, res, next) => {
 
   res.send(`${parts[0]}${renderToString(reactMarkup)}${parts[1]}`);
   res.end();
-  next();
 });
 
 console.log(`listening on ${PORT}`);
