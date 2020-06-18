@@ -10,7 +10,9 @@ require("dotenv").config();
 const dayRouter = require('./Routes');
 
 const app = express();
-app.use(cors());
+const corsOptions = ['http://localhost:3789', 'http://localhost:3789/day'];
+
+app.use(cors(corsOptions));
 app.use(urlencoded({ extended: true }));
 app.use(json());
 app.use(morgan('dev'));
