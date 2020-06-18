@@ -1,0 +1,12 @@
+body,
+html,
+#root {
+  height: 100%;
+  font-size: 16px;
+}
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Poppins", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

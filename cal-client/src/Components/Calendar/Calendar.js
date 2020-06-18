@@ -1,5 +1,4 @@
 import React from "react";
-import ChosenDay from "./ChosenDay";
 import {
   format,
   startOfWeek,
@@ -14,17 +13,26 @@ import {
   toDate,
   startOfDay,
 } from "date-fns";
-import axios from "axios";
-import { updateTime } from "./helper";
-import { NavLink } from "./NavLink";
+import "./Calendar.css";
 
 class Calendar extends React.Component {
-  state = {
-    currentMonth: new Date(),
-    selectedDate: new Date(),
-    times: [],
-    dateClick: false,
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      currentMonth: this.props.currentMonth,
+      selectedDate: this.props.selectedDate,
+      times: this.props.times,
+    };
+
+    this.renderHeader = this.renderHeader.bind(this);
+    this.renderCells = this.renderCells.bind(this);
+    this.renderDays = this.renderDays.bind(this);
+    this.prevMonth = this.prevMonth.bind(this);
+    this.nextMonth = this.nextMonth.bind(this);
+    this.dateClick = this.dateClick.bind(this);
+  }
+
 
   renderHeader() {
     const dateFormat = "MMMM yyyy";
@@ -87,11 +95,11 @@ class Calendar extends React.Component {
               !isSameMonth(day, monthStart)
                 ? "disabled"
                 : isSameDay(day, selectedDate)
-                ? "selected"
-                : ""
-            }`}
+                  ? "selected"
+                  : ""
+              }`}
             key={day}
-            onClick={() => this.onDateClick(toDate(cloneDay))}
+            onClick={(e) => this.dateClick(toDate(cloneDay))}
           >
             <span className="number">{formattedDate}</span>
             <span className="bg">{formattedDate}</span>
@@ -109,87 +117,46 @@ class Calendar extends React.Component {
     return <div className="body">{rows}</div>;
   }
 
-  getEm = async (choice) => {
-    const day = startOfDay(choice);
-    const nextday = startOfDay(addDays(day, 1));
-    const theDay = day.toISOString();
-    const theNextDay = nextday.toISOString();
-    let res = await axios.get(
-      `http://localhost:3000/api/date/${theDay}/${theNextDay}`
-    );
-    let inComing = await res.data.data[0].time;
-
+  async prevMonth() {
+    await this.props.prevMonth();
     this.setState({
-      times: inComing,
+      currentMonth: this.props.currentMonth,
     });
-  };
+  }
 
-  updating = async (time) => {
-    const day = startOfDay(this.state.selectedDate);
-    const nextday = startOfDay(addDays(this.state.selectedDate, 1));
-    const theOne = day.toISOString();
-    const theNext = nextday.toISOString();
-    const timeUpdate = updateTime(this.state.times, time);
-    let res = await axios
-      .put(`http://localhost:3000/api/date/${theOne}/${theNext}`, {
-        time: timeUpdate,
-      })
-      .catch((err) => console.log(err.response));
-
-    let came = res.data.data.time;
-    console.log(came);
+  async nextMonth() {
+    await this.props.nextMonth();
     this.setState({
-      times: timeUpdate,
+      currentMonth: this.props.currentMonth,
     });
-    console.log(res.data);
-  };
+  }
 
-  onDateClick = (day) => {
-    this.getEm(day);
+  async dateClick(day) {
+    await this.props.dateClick(day);
     this.setState({
-      selectedDate: day,
-      dateClick: true,
+      selectedDate: this.props.selectedDate,
+      times: this.props.times,
     });
-  };
-
-  nextMonth = () => {
-    this.setState({
-      currentMonth: addMonths(this.state.currentMonth, 1),
-    });
-  };
-
-  prevMonth = () => {
-    this.setState({
-      currentMonth: subMonths(this.state.currentMonth, 1),
-    });
-  };
-
-  setDateClick = () => {
-    this.setState({
-      dateClick: false,
-      currentMonth: this.state.selectedDate,
-    });
-  };
+  }
 
   render() {
     return (
       <div>
-        {this.state.dateClick ? (
-          <div className="chosenDay">
-            <ChosenDay
-              selectedDate={this.state.selectedDate}
-              clickSetter={this.setDateClick}
-              times={this.state.times}
-              update={this.updating}
-            />
+        <header>
+          <div id="logo">
+            <span className="icon">date_range</span>
+            <span>
+              My<b>Calendar</b>
+            </span>
           </div>
-        ) : (
+        </header>
+        <main>
           <div className="calendar">
             {this.renderHeader()}
             {this.renderDays()}
             {this.renderCells()}
           </div>
-        )}
+        </main>
       </div>
     );
   }
