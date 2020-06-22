@@ -8,7 +8,9 @@
     "serves": "nodemon index.js --exec babel-node",
     "format": "prettier \"src/**/*.{js, html}\" --write",
     "lint": "eslint \"src/**/*.{js, jsx}\" --quiet",
-    "starts": "nodemon server.js"
+    "starts": "nodemon server.js",
+    "serve": "babel-node index.js",
+    "email": "concurrently \"npm run dev\" \"npm run serves\""
   },
   "keywords": [],
   "author": "",

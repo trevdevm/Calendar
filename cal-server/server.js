@@ -38,7 +38,7 @@ app.use('/api', dayRouter);
 
 
 const PORT = process.env.PORT || 3000;
-const uriA = process.env.DB_TWO;
+const uriA = process.env.DB_CONN;
 
 const mongoose = require('mongoose');
 

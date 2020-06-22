@@ -4,9 +4,8 @@ const DayCtrl = require('./Controller');
 
 const router = express.Router();
 
-router.get('/day/:id', DayCtrl.getDayById);
-router.get('/days', DayCtrl.getDays);
+router.get('/days/:start/:end', DayCtrl.getInitialDays);
 router.get('/date/:date/:nextdate', DayCtrl.getDayByDay);
-router.put('/date/:date/:nextdate', DayCtrl.updateDay);
+router.put('/date', DayCtrl.updateDay);
 
 module.exports = router;

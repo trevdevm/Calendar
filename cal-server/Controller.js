@@ -1,46 +1,46 @@
 const Day = require('./DayModel');
 
-const getDayById = async (req, res) => {
-    await Day.findOne({ _id: req.params.id }, (err, day) => {
-        if (err) {
-            return res.status(400).json({ success: false, error: err })
+const getInitialDays = async (req, res) => {
+    await Day.find({ date: { "$gte": req.params.start, "$lt": req.params.end } }, '-_id date time', { sort: { date: 1 } }, (err, day) => {
+        if (day == undefined || day.length <= 0) {
+            return res.status(400).send({ success: false })
+        }
+        const size = day.length;
+        const june = 30;
+        const july = 31;
+
+        let first = {};
+        let second = {};
+        for (let i = 0; i < june; i++) {
+            first[i] = { 'time': day[i].time };
         }
 
-        if (!day) {
-            return res
-                .status(404)
-                .json({ success: false, error: `Day not found` })
+        console.log(`size: ${size}`);
+        let j = 0;
+        for (let i = june; i < size; i++) {
+            second[j] = { 'time': day[i].time };
+            j++;
         }
-        return res.status(200).json({ success: true, data: day })
-    }).catch(err => console.log(err))
-}
-
-const getDays = async (req, res) => {
-    await Day.find({}, (err, days) => {
-        if (err) {
-            return res.status(400).json({ success: false, error: err })
-        }
-        if (!days.length) {
-            return res
-                .status(404)
-                .json({ success: false, error: `Day not found` })
-        }
-        console.log(days);
-        return res.status(200).json({ success: true, data: days })
-    }).catch(err => console.log(err))
+        console.log(`second size: ${size}`);
+        const data = { first, second };
+        return res.status(200).json({ data })
+    })
+        .catch(err => {
+            console.log(err)
+            return res.status(404).send({ success: false, error: err.response })
+        })
 }
 
 const getDayByDay = async (req, res) => {
-    await Day.find({ date: {"$gte": req.params.date, "$lt": req.params.nextdate } }, (err, day) => {
+    await Day.find({ date: { "$gte": req.params.date, "$lt": req.params.nextdate } }, (err, day) => {
         if (err) {
-            return res.status(400).json({ success: false, error: err })
+            return res.status(400).json({ success: false, error: err.response })
         }
 
-        if (!day) {
-            return res
-                .status(404)
-                .json({ success: false, error: `Day not found` })
+        if (day.length == 0) {
+            return res.status(400).send({ success: false });
         }
+
         return res.status(200).json({ success: true, data: day })
     }).catch(err => console.log(err))
 }
@@ -48,21 +48,20 @@ const getDayByDay = async (req, res) => {
 const updateDay = async (req, res) => {
     try {
         const doc = await Day.findOneAndUpdate(
-            { date: {"$gte": req.params.date, "$lt": req.params.nextdate } },
+            { date: { "$gte": req.body.date, "$lt": req.body.nextdate } },
             { time: req.body.time },
             { new: true })
 
-        return res.status(200).json({ success: true, data: doc })
+        return res.status(200).json({ success: true, data: doc });
     }
     catch (err) {
         console.log(err.response);
-        return res.status(404).json({success: false, error: err.response})
+        return res.status(404).json({ success: false, error: err.response })
     }
 }
 
 module.exports = {
-    getDayById,
-    getDays,
+    getInitialDays,
     getDayByDay,
     updateDay
 };
