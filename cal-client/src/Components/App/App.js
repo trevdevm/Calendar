@@ -4,17 +4,11 @@ import Calendar from "../Calendar/Calendar";
 import DayChosen from "../DayChosen/DayChosen";
 import Cthanks from "../Cthanks/Cthanks";
 import {
-  format,
-  startOfWeek,
   addDays,
   startOfMonth,
-  endOfWeek,
   endOfMonth,
-  isSameMonth,
-  isSameDay,
   addMonths,
   subMonths,
-  toDate,
   startOfDay,
 } from "date-fns";
 import axios from "axios";
@@ -30,6 +24,10 @@ class App extends React.Component {
       currentMonth: new Date(),
       selectedDate: new Date(),
       times: ["9:00", "10:00", "11:00", "12:00", "1:00", "2:00", "3:00", "4:00", "5:00"],
+      error: false,
+      current: new Date(),
+      loaded: {},
+      initTime: {},
     };
 
     this.getEm = this.getEm.bind(this);
@@ -37,6 +35,49 @@ class App extends React.Component {
     this.onDateClick = this.onDateClick.bind(this);
     this.nextMonth = this.nextMonth.bind(this);
     this.prevMonth = this.prevMonth.bind(this);
+    this.delay = this.delay.bind(this);
+    this.initializeCal = this.initializeCal.bind(this);
+  }
+
+  componentDidMount() {
+    this.initializeCal();
+  }
+
+  async initializeCal() {
+    const currentMonth = this.state.currentMonth;
+    const startMonth = startOfMonth(currentMonth);
+    const endMonth = endOfMonth(addMonths(startMonth, 2));
+    const theStart = startMonth.toISOString();
+    const theEnd = endMonth.toISOString();
+    const twoMonthsF = addMonths(this.state.current, 1);
+
+    if (currentMonth >= twoMonthsF || currentMonth < this.state.current) {
+      this.setState({
+        initTime: {},
+      })
+
+      console.log(`init should be cleared`);
+      return;
+    }
+
+    try {
+      let res = await axios.get(`http://localhost:3000/api/days/${theStart}/${theEnd}`);
+
+      const days = res.data.data;
+
+      this.setState({
+        loaded: days,
+        initTime: days,
+      })
+
+      return;
+
+    } catch (err) {
+      if (err) {
+        console.log(err.response);
+      }
+      return;
+    }
   }
 
   async getEm(choice) {
@@ -44,14 +85,34 @@ class App extends React.Component {
     const nextday = startOfDay(addDays(day, 1));
     const theDay = day.toISOString();
     const theNextDay = nextday.toISOString();
-    let res = await axios.get(
-      `http://localhost:3000/api/date/${theDay}/${theNextDay}`
-    );
-    let inComing = await res.data.data[0].time;
+    try {
+      let res = await axios.get(
+        `http://localhost:3000/api/date/${theDay}/${theNextDay}`
+      );
 
-    this.setState({
-      times: inComing,
-    });
+      let inComing = await res.data.data[0].time;
+
+      this.setState({
+        times: inComing,
+      });
+
+      return true;
+    } catch (err) {
+      if (err) {
+        let success = err.response.data.success;
+
+        if (!success) {
+          this.setState({
+            error: true,
+          })
+          await this.delay(3500);
+          this.setState({
+            error: false,
+          })
+        }
+      }
+      return false;
+    }
   };
 
   async updating(time) {
@@ -61,7 +122,9 @@ class App extends React.Component {
     const theNext = nextday.toISOString();
     const timeUpdate = updateTime(this.state.times, time);
     let res = await axios
-      .put(`http://localhost:3000/api/date/${theOne}/${theNext}`, {
+      .put("http://localhost:3000/api/date", {
+        date: theOne,
+        nextdate: theNext,
         time: timeUpdate,
       })
       .catch((err) => console.log(err.response));
@@ -79,27 +142,63 @@ class App extends React.Component {
     this.setState({
       selectedDate: day,
     });
-    await this.getEm(day);
-    navigate(`/day`);
+
+    let weGood = await this.getEm(day);
+    if (weGood) {
+      navigate(`/day`);
+    }
   };
 
   nextMonth() {
     this.setState({
       currentMonth: addMonths(this.state.currentMonth, 1),
     });
+
+    const twoMonthsF = addMonths(this.state.current, 1);
+    if (this.state.currentMonth >= twoMonthsF || this.state.currentMonth < this.state.current) {
+
+      this.setState({
+        initTime: {},
+      })
+
+      return;
+    }
+
+    this.setState({
+      initTime: this.state.loaded,
+    })
   };
 
   prevMonth() {
     this.setState({
       currentMonth: subMonths(this.state.currentMonth, 1),
     });
+
+    const twoMonthsF = addMonths(this.state.current, 1);
+    if (this.state.currentMonth >= twoMonthsF || this.state.currentMonth < this.state.current) {
+
+      this.setState({
+        initTime: {},
+      })
+
+      return;
+    }
+    this.setState({
+      initTime: this.state.loaded,
+    })
   };
+
+  delay(ms) {
+    return new Promise((resolve) => {
+      setTimeout(resolve, ms);
+    })
+  }
 
   render() {
     return (
       <div className="app">
         <Router>
-          <Calendar 
+          <Calendar
             currentMonth={this.state.currentMonth}
             selectedDate={this.state.selectedDate}
             times={this.state.times}
@@ -107,13 +206,15 @@ class App extends React.Component {
             dateClick={this.onDateClick}
             prevMonth={this.prevMonth}
             nextMonth={this.nextMonth}
+            initTime={this.state.initTime}
+            error={this.state.error}
             path="/" />
           <DayChosen
             selectedDate={this.state.selectedDate}
             times={this.state.times}
             update={this.updating}
             path="/day" />
-          <Cthanks 
+          <Cthanks
             path="/thx" />
         </Router>
       </div>

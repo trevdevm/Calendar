@@ -8,11 +8,17 @@ const DayChosen = (props) => {
   const [day] = useState(props.selectedDate);
   const [times] = useState(props.times);
   const [verify, setVerify] = useState(false);
+  const [cancSho, setCancSho] = useState(false);
   const [sTime, setsTime] = useState("");
-  const [temp, setTemp] = useState("Demo: Working with database..");
-  const [countDown, setCount] = useState('');
+  const [counter, setCount] = useState(10);
+  const [yeep, setYeep] = useState(false);
+  const [loaded, setLoaded] = useState([]);
   const headFormat = "MMMM d yyyy";
   const weekDay = "EEEE";
+
+  useEffect(() => {
+    setLoaded(require("../../../public/winksC.png"))
+  }, [])
 
   const update = (time) => {
     setsTime(time);
@@ -21,9 +27,14 @@ const DayChosen = (props) => {
   };
 
   const veriMessage = () => {
+    let timeOf = "";
+    if (sTime == "9:00" || sTime == "10:00" || sTime == "11:00")
+      timeOf = "A.M.";
+    else
+      timeOf = "P.M.";
     return (
       <div className="vMessage">
-        <h2>Are you sure you would like an appointment for {format(day, headFormat)} @ {sTime}?</h2>
+        <h2>Are you sure you would like an appointment for {format(day, headFormat)} @ {sTime} {timeOf}?</h2>
         <select><option onClick={(e) => yes()}>Yes</option><option onClick={(e) => no()}>No</option></select>
       </div>
     )
@@ -32,13 +43,18 @@ const DayChosen = (props) => {
   const no = () => {
     setVerify(false);
     setsTime("");
+    cancel();
+  }
+
+  const cancel = async () => {
+    setCancSho(true);
+    await delay(2000);
+    setCancSho(false);
   }
 
   const yes = () => {
     props.update(sTime);
-    setTemp("Demo: DATABASE UPDATED!");
     setVerify(false);
-    setCount("Leaving in 5 seconds.");
     timedThx();
   }
 
@@ -49,28 +65,58 @@ const DayChosen = (props) => {
   }
 
   async function timedThx() {
-    await delay(5000);
+    setYeep(true);
+    await delay(10000);
     navigate("/thx");
   }
 
+
   useEffect(() => {
-    console.log(`${day}, ${times}`);
-  }, [])
+    if (yeep) {
+      const timer =
+        counter > 0 && setInterval(() => setCount(counter - 1), 1000);
+      return () => clearInterval(timer);
+    }
+  }, [yeep, counter]);
+
+  const countEl = () => {
+    if (yeep) {
+      return (
+        <div className="count"><h2>Demo: DATABASE UPDATED! Your choice of {sTime} saved.</h2><img src={loaded} alt="Wink Emoji" /><p>Leaving in {counter} seconds...</p></div>
+      )
+    }
+
+    return (
+      <div className="count"><h2>Demo: Working with database..</h2></div>
+    )
+  }
+
+  const onNope = () => {
+    if (cancSho) {
+      return (
+        <div className="canCel"><h2 className="fadeInBottom">Choice cancelled.</h2></div>
+      )
+    }
+    else {
+      return (
+        <div className="unVeri">
+          <h1>I Look Forward To Meeting You!</h1>
+        </div>
+      )
+    }
+  }
 
   return (
     <div className="dayChosen">
       <nav>
         <Link to="/"
-          style={{
-            textDecoration: "none",
-            color: "seagreen",
-            fontSize: "1.2rem",
-          }}>Calendar</Link>
+          className="dcLink">Calendar</Link>
       </nav>
       <div className="dayHead">
         <h1>{format(day, headFormat)}</h1>
         <h1>{format(day, weekDay)}</h1>
       </div>
+      <div className="temp"></div>
       <div className="times">
         <h2 className="tAv">Times Available:</h2>
         <div className="des">
@@ -92,12 +138,9 @@ const DayChosen = (props) => {
             </li>
           ))}
         </ul>
-        <div className="veri">{verify ? (veriMessage()) : (<div className="unVeri">
-          <h1>I Look Forward To Meeting You!</h1>
-        </div>)}</div>
+        <div className="veri">{verify ? (veriMessage()) : (onNope())}</div>
       </div>
-      <div className="temp">{temp}</div>
-      <div className="count">{countDown}</div>
+      {countEl()}
     </div>
   );
 };

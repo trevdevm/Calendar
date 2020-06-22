@@ -1,15 +1,34 @@
-import React from "react";
-import Link from "@reach/router";
+import React, { useState, useEffect } from "react";
+import { Link } from "@reach/router";
+
+import "./Cthanks.css";
 
 const Cthanks = () => {
-    return (
-        <div className="Cthanks">
-            <h1>Thank You!, this is only a demo. You are not scheduled for any appointment. Do you wish to email the developer?</h1>
+    const [loaded, setLoaded] = useState([]);
 
-            <a href="www.devmunns.site">Email</a>
+    useEffect(() => {
+        setLoaded([require("../../../public/medLogC.png"), require("../../../public/smallLogC.png")])
+    }, [])
+
+    return (
+        <div className="cThanks">
             <div className="other">
-                <a href="www.devmunns.site">Homepage</a>
-                <a href="www.google.com">Leave</a>
+                <nav className="cNav">
+                    <a href="https://www.devmunns.site/contact">Email</a>
+                    <a href="https://www.devmunns.site">Homepage</a>
+                    <Link to="/"
+                        className="calLin">Calendar</Link>
+                </nav>
+                <div className="navLog">
+                    <a href="https://www.devmunns.site"><img src={loaded[1]} id="slC" alt="Trevor's Logo" /></a>
+                </div>
+            </div>
+            <div className="thxHead">
+                <h1>Thank You!, this is only a demo. You are not scheduled for any appointment. Do you wish to email the developer?</h1>
+            </div>
+            <div className="logoC">
+                <a href="https://www.devmunns.site/contact" id="emailMe">Email Me!</a>
+                <a href="https://www.devmunns.site"><img src={loaded[0]} alt="Trevor's logo" /></a>
             </div>
         </div>
     )
