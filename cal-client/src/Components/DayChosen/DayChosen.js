@@ -10,7 +10,7 @@ const DayChosen = (props) => {
   const [verify, setVerify] = useState(false);
   const [cancSho, setCancSho] = useState(false);
   const [sTime, setsTime] = useState("");
-  const [counter, setCount] = useState(10);
+  const [counter, setCount] = useState(8);
   const [yeep, setYeep] = useState(false);
   const [loaded, setLoaded] = useState([]);
   const headFormat = "MMMM d yyyy";
@@ -66,7 +66,7 @@ const DayChosen = (props) => {
 
   async function timedThx() {
     setYeep(true);
-    await delay(10000);
+    await delay(8000);
     navigate("/thx");
   }
 

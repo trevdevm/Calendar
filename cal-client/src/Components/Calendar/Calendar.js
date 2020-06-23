@@ -13,50 +13,33 @@ import {
 } from "date-fns";
 import "./Calendar.css";
 
-class Calendar extends React.Component {
-  constructor(props) {
-    super(props);
+const Calendar = (props) => {
 
-    this.state = {
-      currentMonth: this.props.currentMonth,
-      selectedDate: this.props.selectedDate,
-      times: this.props.times,
-    };
-
-    this.renderHeader = this.renderHeader.bind(this);
-    this.renderCells = this.renderCells.bind(this);
-    this.renderDays = this.renderDays.bind(this);
-    this.renderError = this.renderError.bind(this);
-    this.prevMonth = this.prevMonth.bind(this);
-    this.nextMonth = this.nextMonth.bind(this);
-    this.dateClick = this.dateClick.bind(this);
-  }
-
-  renderHeader() {
+  const renderHeader = () => {
     const dateFormat = "MMMM yyyy";
 
     return (
       <div className="header row flex-middle">
         <div className="col col-start">
-          <div className="icon" onClick={this.prevMonth}>
+          <div className="icon" onClick={props.prevMonth}>
             chevron_left
           </div>
         </div>
         <div className="col col-center">
-          <span>{format(this.state.currentMonth, dateFormat)}</span>
+          <span>{format(props.currentMonth, dateFormat)}</span>
         </div>
-        <div className="col col-end" onClick={this.nextMonth}>
+        <div className="col col-end" onClick={props.nextMonth}>
           <div className="icon">chevron_right</div>
         </div>
       </div>
     );
   }
 
-  renderDays() {
+  const renderDays = () => {
     const dateFormat = "EEEE";
     const days = [];
 
-    let startDate = startOfWeek(this.state.currentMonth);
+    let startDate = startOfWeek(props.currentMonth);
 
     for (let i = 0; i < 7; i++) {
       days.push(
@@ -69,9 +52,10 @@ class Calendar extends React.Component {
     return <div className="days row">{days}</div>;
   }
 
-  renderCells() {
-    const { currentMonth, selectedDate } = this.state;
-    const init = this.props.initTime;
+  const renderCells = () => {
+    const currentMonth = props.currentMonth;
+    const selectedDate = props.selectedDate;
+    const init = props.initTime;
     const monthStart = startOfMonth(currentMonth);
     const monthEnd = endOfMonth(monthStart);
     const startDate = startOfWeek(monthStart);
@@ -114,7 +98,7 @@ class Calendar extends React.Component {
                   : ""
               }`}
             key={day}
-            onClick={(e) => this.dateClick(toDate(cloneDay))}
+            onClick={(e) => props.dateClick(toDate(cloneDay))}
           >
             <span className="number">{formattedDate}</span>
             <span className="bg">{formattedDate}</span>
@@ -133,69 +117,42 @@ class Calendar extends React.Component {
     return <div className="body">{rows}</div>;
   }
 
-  async prevMonth() {
-    await this.props.prevMonth();
-
-    this.setState({
-      currentMonth: this.props.currentMonth,
-    });
-  }
-
-  async nextMonth() {
-    await this.props.nextMonth();
-
-    this.setState({
-      currentMonth: this.props.currentMonth,
-    });
-  }
-
-  async dateClick(day) {
-    await this.props.dateClick(day);
-
-    this.setState({
-      selectedDate: this.props.selectedDate,
-      times: this.props.times,
-    });
-  }
-
-  renderError() {
-    if (this.props.error) {
+  const renderError = () => {
+    if (props.error) {
       let current = new Date();
-      let twoMonths = addMonths(current, 1);
-      let chosen = this.props.currentMonth;
-      if (chosen > twoMonths) {
+      let nextMonth = addMonths(current, 1);
+      let chosen = props.currentMonth;
+      if (isSameMonth(chosen, current) || isSameMonth(chosen, nextMonth)) {
         return (
-          <div className="errBox">Only the first two months have availability.</div>
+          <div className="errBox"><h1>No Times Available. Please choose another day.</h1></div>
         )
       }
       return (
-        <div className="errBox"><h1>No Times Available. Please choose another day.</h1></div>
+        <div className="errBox">Only the first two months have availability.</div>
       )
     }
   }
 
-  render() {
-    return (
-      <div>
-        <header>
-          <div id="logo">
-            <span className="icon">date_range</span>
-            <span>
-              My<b>Calendar</b>
-              {this.renderError()}
-            </span>
-          </div>
-        </header>
-        <main>
-          <div className="calendar">
-            {this.renderHeader()}
-            {this.renderDays()}
-            {this.renderCells()}
-          </div>
-        </main>
-      </div>
-    );
-  }
+  return (
+    <div>
+      <header>
+        <div id="logo">
+          <span className="icon">date_range</span>
+          <span>
+            My<b>Calendar</b>
+            {renderError()}
+          </span>
+        </div>
+      </header>
+      <main>
+        <div className="calendar">
+          {renderHeader()}
+          {renderDays()}
+          {renderCells()}
+        </div>
+      </main>
+    </div>
+  );
 }
 
 export default Calendar;

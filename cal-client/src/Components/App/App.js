@@ -10,6 +10,7 @@ import {
   addMonths,
   subMonths,
   startOfDay,
+  isSameMonth,
 } from "date-fns";
 import axios from "axios";
 import { updateTime } from "../../helper";
@@ -26,7 +27,8 @@ class App extends React.Component {
       times: ["9:00", "10:00", "11:00", "12:00", "1:00", "2:00", "3:00", "4:00", "5:00"],
       error: false,
       current: new Date(),
-      loaded: {},
+      first: {},
+      second: {},
       initTime: {},
     };
 
@@ -46,28 +48,22 @@ class App extends React.Component {
   async initializeCal() {
     const currentMonth = this.state.currentMonth;
     const startMonth = startOfMonth(currentMonth);
-    const endMonth = endOfMonth(addMonths(startMonth, 2));
+    const endMonth = endOfMonth(addMonths(startMonth, 1));
     const theStart = startMonth.toISOString();
     const theEnd = endMonth.toISOString();
-    const twoMonthsF = addMonths(this.state.current, 1);
-
-    if (currentMonth >= twoMonthsF || currentMonth < this.state.current) {
-      this.setState({
-        initTime: {},
-      })
-
-      console.log(`init should be cleared`);
-      return;
-    }
 
     try {
       let res = await axios.get(`http://localhost:3000/api/days/${theStart}/${theEnd}`);
 
       const days = res.data.data;
 
+      const first = days.first;
+      const second = days.second;
+
       this.setState({
-        loaded: days,
-        initTime: days,
+        first: first,
+        second: second,
+        initTime: first,
       })
 
       return;
@@ -90,27 +86,25 @@ class App extends React.Component {
         `http://localhost:3000/api/date/${theDay}/${theNextDay}`
       );
 
-      let inComing = await res.data.data[0].time;
+      if (res.length) {
 
-      this.setState({
-        times: inComing,
-      });
+        let inComing = await res.data.data[0].time;
 
-      return true;
-    } catch (err) {
-      if (err) {
-        let success = err.response.data.success;
+        this.setState({
+          times: inComing,
+        });
 
-        if (!success) {
-          this.setState({
-            error: true,
-          })
-          await this.delay(3500);
-          this.setState({
-            error: false,
-          })
-        }
+        return true;
+      } else {
+
+        return false;
       }
+    } catch (err) {
+
+      if (err) {
+        console.log(err.response);
+      }
+
       return false;
     }
   };
@@ -143,49 +137,75 @@ class App extends React.Component {
       selectedDate: day,
     });
 
-    let weGood = await this.getEm(day);
-    if (weGood) {
-      navigate(`/day`);
+    const nextMonth = addMonths(this.state.current, 1);
+    if (isSameMonth(day, this.state.current) || isSameMonth(day, nextMonth)) {
+
+      let weGood = await this.getEm(day);
+      if (weGood) {
+        navigate(`/day`);
+      } else {
+        this.setState({
+          error: true,
+        })
+
+        await this.delay(3500);
+
+        this.setState({
+          error: false,
+        })
+      }
+    } else {
+      this.setState({
+        error: true,
+      })
+      await this.delay(3500);
+      this.setState({
+        error: false,
+      })
     }
+
   };
 
   nextMonth() {
     this.setState({
       currentMonth: addMonths(this.state.currentMonth, 1),
-    });
+    }, () => {
+      const sameAsCurrent = this.state.current;
+      const nextMonth = addMonths(this.state.current, 1);
+      let view = {};
+      if (isSameMonth(this.state.currentMonth, sameAsCurrent)) {
+        view = this.state.first;
+      }
 
-    const twoMonthsF = addMonths(this.state.current, 1);
-    if (this.state.currentMonth >= twoMonthsF || this.state.currentMonth < this.state.current) {
+      if (isSameMonth(this.state.currentMonth, nextMonth)) {
+        view = this.state.second;
+      }
 
       this.setState({
-        initTime: {},
+        initTime: view,
       })
-
-      return;
-    }
-
-    this.setState({
-      initTime: this.state.loaded,
-    })
+    });
   };
 
   prevMonth() {
     this.setState({
       currentMonth: subMonths(this.state.currentMonth, 1),
-    });
+    }, () => {
+      const sameAsCurrent = this.state.current;
+      const nextMonth = addMonths(this.state.current, 1);
+      let view = {};
+      if (isSameMonth(this.state.currentMonth, sameAsCurrent)) {
+        view = this.state.first;
+      }
 
-    const twoMonthsF = addMonths(this.state.current, 1);
-    if (this.state.currentMonth >= twoMonthsF || this.state.currentMonth < this.state.current) {
+      if (isSameMonth(this.state.currentMonth, nextMonth)) {
+        view = this.state.second;
+      }
 
       this.setState({
-        initTime: {},
+        initTime: view,
       })
-
-      return;
-    }
-    this.setState({
-      initTime: this.state.loaded,
-    })
+    });
   };
 
   delay(ms) {
