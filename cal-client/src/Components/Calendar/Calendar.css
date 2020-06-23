@@ -236,6 +236,12 @@
     color: red;
   }
 
+  .helpBox {
+    color: #777;
+    font-size: 1rem;
+    margin-top: 1%;
+  }
+
   .showTime {
     display: flex;
     flex-direction: column;

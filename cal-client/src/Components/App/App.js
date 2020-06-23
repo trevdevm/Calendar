@@ -143,6 +143,7 @@ class App extends React.Component {
       let weGood = await this.getEm(day);
       if (weGood) {
         navigate(`/day`);
+
       } else {
         this.setState({
           error: true,
@@ -173,16 +174,20 @@ class App extends React.Component {
       const sameAsCurrent = this.state.current;
       const nextMonth = addMonths(this.state.current, 1);
       let view = {};
+      let error = true;
       if (isSameMonth(this.state.currentMonth, sameAsCurrent)) {
         view = this.state.first;
+        error = false;
       }
 
       if (isSameMonth(this.state.currentMonth, nextMonth)) {
         view = this.state.second;
+        error = false;
       }
 
       this.setState({
         initTime: view,
+        error: error,
       })
     });
   };
@@ -194,17 +199,23 @@ class App extends React.Component {
       const sameAsCurrent = this.state.current;
       const nextMonth = addMonths(this.state.current, 1);
       let view = {};
+      let error = true;
+
       if (isSameMonth(this.state.currentMonth, sameAsCurrent)) {
         view = this.state.first;
+        error = false;
       }
 
       if (isSameMonth(this.state.currentMonth, nextMonth)) {
         view = this.state.second;
+        error = false;
       }
 
       this.setState({
         initTime: view,
+        error: error,
       })
+
     });
   };
 

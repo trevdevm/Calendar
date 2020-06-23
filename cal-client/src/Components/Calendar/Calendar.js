@@ -131,6 +131,11 @@ const Calendar = (props) => {
         <div className="errBox">Only the first two months have availability.</div>
       )
     }
+    else {
+      return (
+        <div className="helpBox">Please select a date with available times to demo this calendar application.</div>
+      )
+    }
   }
 
   return (
