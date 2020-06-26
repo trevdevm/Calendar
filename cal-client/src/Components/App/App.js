@@ -11,6 +11,7 @@ import {
   subMonths,
   startOfDay,
   isSameMonth,
+  getDate,
 } from "date-fns";
 import axios from "axios";
 import { updateTime } from "../../helper";
@@ -86,7 +87,7 @@ class App extends React.Component {
         `http://localhost:3000/api/date/${theDay}/${theNextDay}`
       );
 
-      if (res.length) {
+      if (res.length || res.data.success) {
 
         let inComing = await res.data.data[0].time;
 
@@ -111,6 +112,9 @@ class App extends React.Component {
 
   async updating(time) {
     const day = startOfDay(this.state.selectedDate);
+    const nextMonth = addMonths(this.state.current, 1);
+    const numDate = getDate(day);
+    const index = numDate - 1;
     const nextday = startOfDay(addDays(this.state.selectedDate, 1));
     const theOne = day.toISOString();
     const theNext = nextday.toISOString();
@@ -125,9 +129,25 @@ class App extends React.Component {
 
     let came = res.data.data.time;
     console.log(came);
-    this.setState({
-      times: timeUpdate,
-    });
+
+
+    if (isSameMonth(day, this.state.current)) {
+      const tempStateOne = this.state.first;
+      tempStateOne[index].time = came;
+      this.setState({
+        times: timeUpdate,
+        first: tempStateOne,
+      });
+    }
+
+    if (isSameMonth(day, nextMonth)) {
+      const tempStateTwo = this.state.second;
+      tempStateTwo[index].time = came;
+      this.setState({
+        times: timeUpdate,
+        second: tempStateTwo,
+      });
+    }
 
     console.log(res.data.success);
   };
