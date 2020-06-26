@@ -8,10 +8,14 @@ coverage/
 .vscode/
 .env
 package-lock.json
+config/
 
 # testing
 /coverage
 extras/
+test/
+logs/
+ssr/
 
 # production
 /build
