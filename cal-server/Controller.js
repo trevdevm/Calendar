@@ -20,10 +20,7 @@ const getInitialDays = async (req, res) => {
                 }
 
                 const size = day.length;
-                const june = 30;
-                //const july = 31;
                 const current = new Date();
-                //const next = addMonths(current, 1);
 
                 let j = 0;
                 let first = {};

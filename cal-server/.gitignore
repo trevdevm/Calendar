@@ -8,7 +8,6 @@ coverage/
 .vscode/
 .env
 package-lock.json
-config/
 
 # testing
 /coverage

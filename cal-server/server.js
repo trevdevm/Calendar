@@ -24,21 +24,21 @@ app.use(urlencoded({ extended: true }));
 app.use(json());
 
 app.use(helmet());
-/*app.use(helmet.contentSecurityPolicy({
+app.use(helmet.contentSecurityPolicy({
   // Specify directives as normal.
   directives: {
     defaultSrc: ["'self'", 'devmunns.site'],
-    scriptSrc: ["'self'", "'unsafe-inline'"],
-    styleSrc: ['self', 'fonts.googleapis.com'],
+    scriptSrc: ["'self'"],
+    styleSrc: ["'self'", 'fonts.googleapis.com'],
     fontSrc: ["'self'", 'fonts.gstatic.com'],
-    imgSrc: ['self'],
+    imgSrc: ["'self'"],
     sandbox: ['allow-forms', 'allow-scripts'],
     reportUri: '/report-violation',
     objectSrc: ["'none'"],
     upgradeInsecureRequests: true,
     workerSrc: false  // This is not set.
   }
-}));*/
+}));
 
 
 app.use('/api', dayRouter);
@@ -58,7 +58,8 @@ app.use((err, req, res, next) => {
 connect(uriA)
   .then(() =>
     app.listen(PORT, () => {
-      winston.info(`server on http://localhost:${PORT} :)`)
+      winston.info(`server on http://localhost:${PORT} :)`);
+      process.send('ready');
     }))
   .catch(err => {
     winston.error(`${err.status} - ${err.message}`);
