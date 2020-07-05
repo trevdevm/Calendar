@@ -54,7 +54,7 @@ class App extends React.Component {
     const theEnd = endMonth.toISOString();
 
     try {
-      let res = await axios.get(`http://localhost:3000/api/days/${theStart}/${theEnd}`);
+      let res = await axios.get(`http://localhost:3005/api/days/${theStart}/${theEnd}`);
 
       const days = res.data.data;
 
@@ -84,7 +84,7 @@ class App extends React.Component {
     const theNextDay = nextday.toISOString();
     try {
       let res = await axios.get(
-        `http://localhost:3000/api/date/${theDay}/${theNextDay}`
+        `http://localhost:3005/api/date/${theDay}/${theNextDay}`
       );
 
       if (res.length || res.data.success) {
@@ -120,7 +120,7 @@ class App extends React.Component {
     const theNext = nextday.toISOString();
     const timeUpdate = updateTime(this.state.times, time);
     let res = await axios
-      .put("http://localhost:3000/api/date", {
+      .put("http://localhost:3005/api/date", {
         date: theOne,
         nextdate: theNext,
         time: timeUpdate,
@@ -128,7 +128,6 @@ class App extends React.Component {
       .catch((err) => console.log(err.response));
 
     let came = res.data.data.time;
-    console.log(came);
 
 
     if (isSameMonth(day, this.state.current)) {
@@ -148,8 +147,6 @@ class App extends React.Component {
         second: tempStateTwo,
       });
     }
-
-    console.log(res.data.success);
   };
 
   async onDateClick(day) {
@@ -259,7 +256,7 @@ class App extends React.Component {
             nextMonth={this.nextMonth}
             initTime={this.state.initTime}
             error={this.state.error}
-            path="/" />
+            default path="/cal" />
           <DayChosen
             selectedDate={this.state.selectedDate}
             times={this.state.times}

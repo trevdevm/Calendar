@@ -139,7 +139,7 @@ const Calendar = (props) => {
   }
 
   return (
-    <div>
+    <div className="heightControl">
       <header>
         <div id="logo">
           <span className="icon">date_range</span>

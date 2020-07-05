@@ -16,7 +16,7 @@ const Cthanks = () => {
                 <nav className="cNav">
                     <a href="https://www.devmunns.site/contact">Email</a>
                     <a href="https://www.devmunns.site">Homepage</a>
-                    <Link to="/"
+                    <Link to="/cal"
                         className="calLin">Calendar</Link>
                 </nav>
                 <div className="navLog">

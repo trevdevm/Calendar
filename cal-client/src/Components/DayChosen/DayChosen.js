@@ -109,7 +109,7 @@ const DayChosen = (props) => {
   return (
     <div className="dayChosen">
       <nav>
-        <Link to="/"
+        <Link to="/cal"
           className="dcLink">Calendar</Link>
       </nav>
       <div className="dayHead">
@@ -126,11 +126,7 @@ const DayChosen = (props) => {
           {times.map((time, index) => (
             <li key={index.toString()} style={{ listStyle: "none" }}>
               <button
-                style={{
-                  color: "seagreen",
-                  fontSize: "1.7em",
-                  border: "0",
-                }}
+                className="tButtons"
                 onClick={(e) => update(time)}
               >
                 {time}

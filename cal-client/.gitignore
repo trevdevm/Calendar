@@ -7,7 +7,7 @@ dist/
 coverage/
 .vscode/
 .env
-public/
+#public/
 
 # testing
 /coverage
