@@ -7,7 +7,7 @@ dist/
 coverage/
 .vscode/
 .env
-#public/
+package-lock.json
 
 # testing
 /coverage
@@ -15,6 +15,12 @@ extras/
 
 # production
 /build
+public/
+src/
+.babelrc
+.eslintrc.json
+.prettierrc
+package.json
 
 # misc
 .DS_Store
