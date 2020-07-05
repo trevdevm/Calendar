@@ -13,7 +13,7 @@ package-lock.json
 /coverage
 extras/
 test/
-logs/
+#logs/
 ssr/
 
 # production

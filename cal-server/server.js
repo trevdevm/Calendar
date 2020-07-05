@@ -13,7 +13,7 @@ const dayRouter = require('./Routes');
 
 const app = express();
 app.use(morgan('combined', { stream: winston.stream }));
-const corsOptions = ['http://localhost:3789', 'http://localhost:3789/day'];
+const corsOptions = "https://www.devmunns.site";
 
 const PORT = process.env.PORT || 3000;
 const uriA = process.env.DB_CONN;
@@ -25,7 +25,6 @@ app.use(json());
 
 app.use(helmet());
 app.use(helmet.contentSecurityPolicy({
-  // Specify directives as normal.
   directives: {
     defaultSrc: ["'self'", 'devmunns.site'],
     scriptSrc: ["'self'"],
@@ -36,7 +35,7 @@ app.use(helmet.contentSecurityPolicy({
     reportUri: '/report-violation',
     objectSrc: ["'none'"],
     upgradeInsecureRequests: true,
-    workerSrc: false  // This is not set.
+    workerSrc: false
   }
 }));
 
