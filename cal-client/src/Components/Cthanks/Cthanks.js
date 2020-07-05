@@ -24,7 +24,7 @@ const Cthanks = () => {
                 </div>
             </div>
             <div className="thxHead">
-                <h1>Thank You!, this is only a demo. You are not scheduled for any appointment. Do you wish to email the developer?</h1>
+                <h1>Thank You! This is only a demo. You are <b>NOT</b> scheduled for any appointment. Do you wish to email the developer?</h1>
             </div>
             <div className="logoC">
                 <a href="https://www.devmunns.site/contact" id="emailMe">Email Me!</a>

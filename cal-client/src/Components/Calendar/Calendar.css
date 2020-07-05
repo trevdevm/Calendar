@@ -241,7 +241,7 @@ header #logo .icon {
 .helpBox {
   color: #777;
   font-size: 1.7rem;
-  margin-top: 1%;
+  margin-top: 2%;
 }
 
 .showTime {
@@ -289,6 +289,7 @@ header #logo .icon {
   
   .helpBox {
     font-size: 1.3rem;
+    margin-top: 1%;
   }
   
   .showTime {

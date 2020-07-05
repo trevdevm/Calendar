@@ -262,11 +262,8 @@ nav {
     }
 
     .canCel {
-        grid-row: 4 / 5;
-        position: absolute;
-        display: inline-block;
         width: 100%;
-        top: 60%;
+        top: 62%;
         left: 60%;
     }
 }
