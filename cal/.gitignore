@@ -14,7 +14,7 @@ package-lock.json
 extras/
 
 # production
-/build
+#/build
 public/
 src/
 .babelrc
