@@ -3,7 +3,7 @@
 # dependencies
 /node_modules
 .cache/
-dist/
+#dist/
 coverage/
 .vscode/
 .env
@@ -14,13 +14,14 @@ package-lock.json
 extras/
 
 # production
-#/build
-#public/
-#src/
-#.babelrc
-#.eslintrc.json
-#.prettierrc
-#package.json
+/build
+public/
+src/
+.babelrc
+.eslintrc.json
+.prettierrc
+package.json
+static/
 
 # misc
 .DS_Store
