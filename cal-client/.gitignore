@@ -14,13 +14,13 @@ package-lock.json
 extras/
 
 # production
-/build
-public/
-src/
-.babelrc
-.eslintrc.json
-.prettierrc
-package.json
+#/build
+#public/
+#src/
+#.babelrc
+#.eslintrc.json
+#.prettierrc
+#package.json
 
 # misc
 .DS_Store
