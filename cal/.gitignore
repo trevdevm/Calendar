@@ -22,6 +22,7 @@ src/
 .prettierrc
 package.json
 static/
+ssr/
 
 # misc
 .DS_Store
