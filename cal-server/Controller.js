@@ -7,6 +7,10 @@ const isSameMonth = require('date-fns/isSameMonth');
 
 
 const getInitialDays = async (req, res) => {
+    if (!req.params) {
+        return res.status(400).send({ success: false })
+    }
+
     try {
         const start = req.params.start;
         const end = req.params.end;
@@ -80,8 +84,8 @@ const getDayByDay = async (req, res) => {
         }
         else {
             const error = new ValidationError("Your input could not be validated.");
-            winston.error(`${error}`)
-            res.status(400).send(`${error.name}: ${error.message}`);
+            winston.error(`${error}`);
+            res.status(400).send({ success: false });
         }
     }
     catch (error) {

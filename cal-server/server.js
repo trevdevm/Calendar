@@ -13,7 +13,7 @@ const dayRouter = require('./Routes');
 
 const app = express();
 app.use(morgan('combined', { stream: winston.stream }));
-const corsOptions = "https://www.devmunns.site";
+const corsOptions = ["https://www.devmunns.site/cal", "http://localhost:3789/cal", "http://localhost:3789/day"];
 
 const PORT = process.env.PORT || 3000;
 const uriA = process.env.DB_CONN;
