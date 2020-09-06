@@ -20,7 +20,7 @@ public/
 .babelrc
 .eslintrc.json
 .prettierrc
-package.json
+#package.json
 static/
 ssr/
 
