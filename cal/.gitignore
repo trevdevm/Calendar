@@ -16,7 +16,7 @@ extras/
 # production
 #/build
 public/
-src/
+#src/
 .babelrc
 .eslintrc.json
 .prettierrc
