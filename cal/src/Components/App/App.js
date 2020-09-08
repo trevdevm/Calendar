@@ -15,8 +15,8 @@ import { updateTime } from "../../helper";
 import Loading from "../Loading";
 
 import "./App.css";
+import Calendar from "../Calendar/Calendar";
 
-const Calendar = React.lazy(() => import("../Calendar/Calendar"));
 const DayChosen = React.lazy(() => import("../DayChosen/DayChosen"));
 const Cthanks = React.lazy(() => import("../Cthanks/Cthanks"));
 
@@ -276,9 +276,9 @@ class App extends React.Component {
               selectedDate={this.state.selectedDate}
               times={this.state.times}
               update={this.updating}
-              path="/day" />
+              path="cal/day" />
             <Cthanks
-              path="/thx" />
+              path="cal/thx" />
           </Router>
         </Suspense>
       </div>
