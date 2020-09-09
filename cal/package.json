@@ -59,7 +59,7 @@
     "prod": "npm run webpack -- --env.mode production",
     "dev": "npm run devServer -- --env.mode development",
     "parceldev": "NODE_ENV=development&& parcel src/index.html --open -p 3789",
-    "clean": "rm -rf .cache/ dist/",
+    "clean": "rm -rf dist/",
     "cleanssr": "rm -rf ssr/*.js && rm -rf ssr/Components/",
     "build": "NODE_ENV=production&& parcel build --public-url ./ src/index.html",
     "format": "prettier \"src/**/*.{js, html}\" --write",
