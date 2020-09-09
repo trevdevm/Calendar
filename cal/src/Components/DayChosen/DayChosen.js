@@ -81,7 +81,7 @@ const DayChosen = (props) => {
   async function timedThx() {
     setYeep(true);
     await delay(8000);
-    navigate("/thx");
+    navigate("/cal/thx");
   }
 
 

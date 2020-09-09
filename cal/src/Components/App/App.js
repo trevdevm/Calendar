@@ -1,5 +1,6 @@
 import React, { Suspense } from "react";
 import { Router, navigate } from "@reach/router";
+import { lazy } from "@loadable/component";
 import {
   addDays,
   startOfMonth,
@@ -17,8 +18,8 @@ import Loading from "../Loading";
 import "./App.css";
 import Calendar from "../Calendar/Calendar";
 
-const DayChosen = React.lazy(() => import("../DayChosen/DayChosen"));
-const Cthanks = React.lazy(() => import("../Cthanks/Cthanks"));
+const DayChosen = lazy(() => import("../DayChosen/DayChosen"));
+const Cthanks = lazy(() => import("../Cthanks/Cthanks"));
 
 class App extends React.Component {
   constructor(props) {
@@ -172,7 +173,7 @@ class App extends React.Component {
 
       let weGood = await this.getEm(day);
       if (weGood || this.state.api == false) {
-        navigate(`/day`);
+        navigate(`/cal/day`);
       }
 
       else {
