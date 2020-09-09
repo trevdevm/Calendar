@@ -36,7 +36,7 @@ module.exports = () => ({
                 use: [{
                     loader: "file-loader",
                     options: {
-                        publicPath: "/",
+                        publicPath: "",
                         name: "[name].[ext]",
                         esModule: false,
                     }
@@ -46,7 +46,7 @@ module.exports = () => ({
     },
     output: {
         filename: "[id].bundle.js",
-        publicPath: "/"
+        publicPath: ""
     },
     plugins: [
         new HtmlWebpackPlugin({
@@ -54,7 +54,7 @@ module.exports = () => ({
         }),
         new MiniCssExtractPlugin({
             filename: '[name].css',
-            publicPath: "/"
+            publicPath: ""
         }),
         new CompressWebpack({
             exclude: [/\.html$/i, /\.json$/i]
