@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { format } from "date-fns";
-import { Link, navigate } from "@reach/router";
+import { Link, useHistory } from "react-router-dom";
 import { isMobile } from "react-device-detect";
 
 import "./DayChosen.css";
@@ -14,6 +14,7 @@ const DayChosen = (props) => {
   const [counter, setCount] = useState(8);
   const [yeep, setYeep] = useState(false);
   const [loaded, setLoaded] = useState([]);
+  const history = useHistory();
   const headFormat = "MMMM d, yyyy";
   const weekDay = "EEEE";
 
@@ -81,7 +82,7 @@ const DayChosen = (props) => {
   async function timedThx() {
     setYeep(true);
     await delay(8000);
-    navigate("/cal/thx");
+    history.replace("/cal/thx");
   }
 
 

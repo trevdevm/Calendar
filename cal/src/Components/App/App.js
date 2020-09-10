@@ -1,6 +1,6 @@
-import React, { Suspense } from "react";
-import { Router, navigate } from "@reach/router";
-import { lazy } from "@loadable/component";
+import React from "react";
+import { Route, Switch, Redirect, withRouter } from "react-router-dom";
+import loadable from "@loadable/component";
 import {
   addDays,
   startOfMonth,
@@ -18,8 +18,10 @@ import Loading from "../Loading";
 import "./App.css";
 import Calendar from "../Calendar/Calendar";
 
-const DayChosen = lazy(() => import("../DayChosen/DayChosen"));
-const Cthanks = lazy(() => import("../Cthanks/Cthanks"));
+const DayChosen = loadable(() => import("../DayChosen/DayChosen"), {
+  fallback: <Loading />
+});
+const Cthanks = loadable(() => import("../Cthanks/Cthanks"));
 
 class App extends React.Component {
   constructor(props) {
@@ -36,6 +38,7 @@ class App extends React.Component {
       second: {},
       initTime: {},
     };
+
 
     this.getEm = this.getEm.bind(this);
     this.updating = this.updating.bind(this);
@@ -164,6 +167,7 @@ class App extends React.Component {
   };
 
   async onDateClick(day) {
+    const { history } = this.props;
     this.setState({
       selectedDate: day,
     });
@@ -172,8 +176,8 @@ class App extends React.Component {
     if (isSameMonth(day, this.state.current) || isSameMonth(day, nextMonth)) {
 
       let weGood = await this.getEm(day);
-      if (weGood || this.state.api == false) {
-        navigate(`/cal/day`);
+      if (weGood || this.state.api === false) {
+        history.replace("/cal/day");
       }
 
       else {
@@ -260,8 +264,8 @@ class App extends React.Component {
   render() {
     return (
       <div className="app">
-        <Suspense fallback={<Loading />}>
-          <Router>
+        <Switch>
+          <Route exact path={["/", "/cal"]}>
             <Calendar
               currentMonth={this.state.currentMonth}
               selectedDate={this.state.selectedDate}
@@ -272,19 +276,22 @@ class App extends React.Component {
               nextMonth={this.nextMonth}
               initTime={this.state.initTime}
               error={this.state.error}
-              default path="/cal" />
+            />
+          </Route>
+          <Route path="/cal/day">
             <DayChosen
               selectedDate={this.state.selectedDate}
               times={this.state.times}
               update={this.updating}
-              path="cal/day" />
-            <Cthanks
-              path="cal/thx" />
-          </Router>
-        </Suspense>
+            />
+          </Route>
+          <Route path="/cal/thx">
+            <Cthanks />
+          </Route>
+        </Switch>
       </div>
     );
   }
 }
 
-export default App;
+export default withRouter(App);
