@@ -3,7 +3,7 @@
 # dependencies
 /node_modules
 .cache/
-#dist/
+dist/
 coverage/
 .vscode/
 .env
@@ -23,6 +23,7 @@ public/
 #package.json
 static/
 ssr/
+webpack_setup/
 
 # misc
 .DS_Store
