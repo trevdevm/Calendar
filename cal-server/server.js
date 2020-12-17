@@ -13,7 +13,7 @@ const dayRouter = require('./Routes');
 
 const app = express();
 app.use(morgan('combined', { stream: winston.stream }));
-const corsOptions = ["https://www.devmunns.site/cal", "http://localhost:3789/cal", "http://localhost:3789/day"];
+const corsOptions = [process.env.CAL_URL, process.env.ROUTE1, process.env.ROUTE2];
 
 const PORT = process.env.PORT || 3000;
 const uriA = process.env.DB_CONN;
@@ -26,7 +26,7 @@ app.use(json());
 app.use(helmet());
 app.use(helmet.contentSecurityPolicy({
   directives: {
-    defaultSrc: ["'self'", 'devmunns.site'],
+    defaultSrc: ["'self'", process.env.SHORT_BASE],
     scriptSrc: ["'self'"],
     styleSrc: ["'self'", 'fonts.googleapis.com'],
     fontSrc: ["'self'", 'fonts.gstatic.com'],
